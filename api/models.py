@@ -25,4 +25,10 @@ class BoardStatus(models.Model):
     title = models.CharField(max_length = 25)
     day = models.CharField(max_length = 15)
     
+class BoardWrite(models.Model):
+    idx = models.IntegerField(max_length = 10, primary_key = True)
+    title = models.CharField(max_length = 25)
+    day = models.CharField(max_length = 15)
+    contents = models.CharField(max_length = 500)
+    
     

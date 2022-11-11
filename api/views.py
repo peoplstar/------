@@ -8,7 +8,7 @@ import DBManager
 import login
 
 from .serializers import (BoardStatusSerializer, LoginSerializer,
-                          ReservationSerializer, StatusSerializer)
+                          ReservationSerializer, StatusSerializer, BoardWriteSerializer)
 
 err_msg = "입력하신 아이디 혹은 비밀번호가 일치하지 않습니다."
 suc_msg = "로그인이 되었습니다."
@@ -76,10 +76,26 @@ class BoardStatusView(APIView):
     def post(self, request):
         serializer = BoardStatusSerializer(data = request.data)
         if serializer.is_valid():
+            res_data = []
             inform = request.data
             dump = json.dumps(inform)
             tmp = json.loads(dump)
-            lms_id = tmp['lms_id']
+            idx = tmp['idx']
+            title = tmp['title']
             day = tmp['day']
-            place = tmp['place']
+            
         pass
+    
+class BoardWriteView(APIView):
+    def post(self, request):
+        serializer = BoardWriteSerializer(data = request.data)
+        if serializer.is_valid():
+            inform = request.data
+            dump = json.dumps(inform)
+            tmp = json.loads(dump)
+            idx = tmp['idx']
+            title = tmp['title']
+            day = tmp['day']
+            contents = tmp['contents']
+        pass
+    
