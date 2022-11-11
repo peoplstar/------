@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BoardStatus, Login, Reservation, Status
+from .models import BoardStatus, BoardWrite, Login, Reservation, Status
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -39,3 +39,13 @@ class BoardStatusSerializer(serializers.ModelSerializer):
     class Meta:
        model = BoardStatus
        fields = ('idx', 'title', 'day')
+       
+class BoardWriteSerializer(serializers.ModelSerializer):
+    idx = serializers.IntegerField(max_length = 10, primary_key = True)
+    title = serializers.CharField(max_length = 25)
+    day = serializers.CharField(max_length = 15)
+    contents = serializers.CharField(max_length = 500)
+    
+    class Meta:
+       model = BoardWrite
+       fields = ('idx', 'title', 'day', 'contents')
