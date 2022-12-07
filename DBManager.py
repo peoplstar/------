@@ -6,7 +6,7 @@ class Firebase():
     def __init__(self):
         # Firebase database 인증 및 앱 초기화
         if not firebase_admin._apps:
-            cred = credentials.Certificate("/home/ubuntu/server/gwnu-reservation-496bf-firebase-adminsdk-w90ca-6fc6c9370a.json")
+            cred = credentials.Certificate("/home/ubuntu/gwnu_project/gwnu_project.json")
             firebase_admin.initialize_app(cred, {
                 'databaseURL': 'https://gwnu-reservation-496bf-default-rtdb.asia-southeast1.firebasedatabase.app/'
             })
@@ -65,11 +65,13 @@ class Firebase():
 
 
     # 게시글 추가, 게시글 키 값은 고유 키로 부여
-    def write_post(self, title, contents, student_id):
+    def write_post(self, student_id, title, contents, date):
         information = {
+            "student_id": student_id,
             "title": title,
             "contents": contents,
-            "user_id": student_id
+            "date": date,
+            "comment": 'null'
         }
         self.ref.child('post').push().update(information)
 

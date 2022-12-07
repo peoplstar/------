@@ -41,7 +41,7 @@ class BoardStatusSerializer(serializers.ModelSerializer):
        fields = ('idx', 'title', 'day')
        
 class BoardWriteSerializer(serializers.ModelSerializer):
-    idx = serializers.IntegerField(max_length = 10, primary_key = True)
+    idx = serializers.CharField(max_length = 10, primary_key = True)
     title = serializers.CharField(max_length = 25)
     day = serializers.CharField(max_length = 15)
     contents = serializers.CharField(max_length = 500)
