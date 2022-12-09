@@ -8,7 +8,9 @@ import DBManager
 import login
 
 from .serializers import (BoardStatusSerializer, LoginSerializer,
-                          ReservationSerializer, StatusSerializer, BoardWriteSerializer)
+                          ReservationSerializer, StatusSerializer, 
+                          BoardWriteSerializer, CommentsSerializer,
+                          BoardReadSerializer)
 
 err_msg = "입력하신 아이디 혹은 비밀번호가 일치하지 않습니다."
 suc_msg = "로그인이 되었습니다."
@@ -24,8 +26,14 @@ class LoginView(APIView):
             password = tmp['lms_pw']
 
             if userid == 'gwnu_admin':
-                # DB에서 해당 패스워드 비교 이후 admin account msg return
-                pass
+                db_connect = DBManager.Firebase()
+                msg = db_connect.password_check_admin(password)
+
+                if msg == '1':
+                    return Response(suc_msg, status = status.HTTP_200_OK)
+                else :
+                    return Response(err_msg, status = status.HTTP_200_OK)
+                
             else:
                 module = login.loginModule(userid, password)
                 msg = module.login()
@@ -45,7 +53,6 @@ class StatusView(APIView):
             day = tmp['day']
             place = tmp['place']
 
-
             db_connect = DBManager.Firebase()
             status_time = db_connect.status_user_reservation(day, place)
             
@@ -53,39 +60,57 @@ class StatusView(APIView):
             # DB에서 place, day 기반 사용중인 시간대 전송
             
 class ReservationView(APIView):
-    def post(self, request):
+      def post(self, request):
         serializer = ReservationSerializer(data = request.data)
         if serializer.is_valid():
             inform = request.data
             dump = json.dumps(inform)
             tmp = json.loads(dump)
+            mode = tmp['mode']
             lms_id = tmp['lms_id']
             day = tmp['day']
             place = tmp['place']
             start_time = tmp['start_time']
             end_time = tmp['end_time']
             appd = tmp['appd'] # 승인 여부
-            db_connect = DBManager.Firebase
-            db_connect.add_user_reservation(place, day, lms_id, start_time, end_time, appd)
+
+            db_connect = DBManager.Firebase()
+            if mode == 'rez':
+                db_connect.add_reservation(place, day, lms_id, start_time, end_time, appd)
+            elif mode == 'del':
+                db_connect.delete_reservation(place, day, lms_id)
             
-            return Response("Reservation Success", status = status.HTTP_200_OK)
+            return Response("Success", status = status.HTTP_200_OK)
             # 해당 내용을 DB에 전송 이후 관리자에게 FCM
             
             
+class BoardReadView(APIView):
+    def post(self, request):
+        serializer = BoardReadSerializer(data = request.data)
+        if serializer.is_valid():
+            inform = request.data
+            dump = json.dumps(inform)
+            tmp = json.loads(dump)
+            title = tmp['title']
+            
+            db_connect = DBManager.Firebase()
+            read = db_connect.read_board(title)
+            
+            return Response(read, status = status.HTTP_200_OK)
+
 class BoardStatusView(APIView):
     def post(self, request):
         serializer = BoardStatusSerializer(data = request.data)
         if serializer.is_valid():
-            res_data = []
             inform = request.data
             dump = json.dumps(inform)
             tmp = json.loads(dump)
-            idx = tmp['idx']
-            title = tmp['title']
-            day = tmp['day']
-            
-        pass
-    
+
+            db_connect = DBManager.Firebase()
+            lst = db_connect.post_list()
+
+            return Response(lst, status = status.HTTP_200_OK)
+
 class BoardWriteView(APIView):
     def post(self, request):
         serializer = BoardWriteSerializer(data = request.data)
@@ -93,9 +118,33 @@ class BoardWriteView(APIView):
             inform = request.data
             dump = json.dumps(inform)
             tmp = json.loads(dump)
-            idx = tmp['idx']
+            comment = 'null'
             title = tmp['title']
             day = tmp['day']
             contents = tmp['contents']
-        pass
+            lms_id = tmp['lms_id']
+
+            db_connect = DBManager.Firebase()
+            db_connect.write_post(lms_id, title, contents, day)
+
+            return Response("Success", status = status.HTTP_200_OK)
     
+class CommentsView(APIView):
+    def post(self, request):
+        serializer = CommentsSerializer(data = request.data)
+        if serializer.is_valid():
+            inform = request.data
+            dump = json.dumps(inform)
+            tmp = json.loads(dump)
+            mode = tmp['mode']
+            lms_id = tmp['lms_id']
+            title = tmp['title']
+            comment = tmp['comment']
+            db_connect = DBManager.Firebase()
+
+            if mode == 'ins':
+                db_connect.write_comment(lms_id, title, comment)
+            elif mode == 'del':
+                db_connect.delete_comment(lms_id, title, comment) 
+
+            return Response("Success", status = status.HTTP_200_OK)

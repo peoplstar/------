@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BoardStatus, BoardWrite, Login, Reservation, Status
+from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -20,32 +20,48 @@ class StatusSerializer(serializers.ModelSerializer):
        fields = ('day', 'place')
        
 class ReservationSerializer(serializers.ModelSerializer):
+    mode = serializers.CharField(max_length = 5)
     lms_id = serializers.CharField(max_length = 15)
     day = serializers.CharField(max_length = 10)
     place = serializers.CharField(max_length = 20)
     start_time = serializers.CharField(max_length = 10)
     end_time = serializers.CharField(max_length = 10)
-    appd = serializers.BooleanField()
+    appd = serializers.CharField(max_length = 1)
     
     class Meta:
        model = Reservation
        fields = ('lms_id', 'day', 'place', 'start_time', 'end_time', 'appd')
        
 class BoardStatusSerializer(serializers.ModelSerializer):
-    idx = serializers.IntegerField(max_length = 10, primary_key = True)
-    title = serializers.CharField(max_length = 25)
-    day = serializers.CharField(max_length = 15)
+    lms_id = serializers.CharField(max_length = 15)
     
     class Meta:
        model = BoardStatus
-       fields = ('idx', 'title', 'day')
+       fields = ('lms_id',)
        
 class BoardWriteSerializer(serializers.ModelSerializer):
-    idx = serializers.CharField(max_length = 10, primary_key = True)
+    lms_id = serializers.CharField(max_length = 15)
     title = serializers.CharField(max_length = 25)
     day = serializers.CharField(max_length = 15)
     contents = serializers.CharField(max_length = 500)
     
     class Meta:
        model = BoardWrite
-       fields = ('idx', 'title', 'day', 'contents')
+       fields = ('lms_id', 'title', 'day', 'contents')
+
+class BoardReadSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(max_length = 25)
+    
+    class Meta:
+       model = BoardRead
+       fields = ('title',)
+
+class CommentsSerializer(serializers.ModelSerializer):
+    mode = serializers.CharField(max_length = 5)
+    lms_id = serializers.CharField(max_length = 15)
+    title = serializers.CharField(max_length = 25)
+    comment = serializers.CharField(max_length = 50)    
+    
+    class Meta:
+       model = Comments
+       fields = ('mode', 'lms_id', 'title', 'comment')
