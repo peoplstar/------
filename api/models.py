@@ -32,6 +32,7 @@ class BoardStatus(models.Model):
     lms_id = models.CharField(max_length = 15, primary_key = True)
     
 class BoardWrite(models.Model):
+    mode = models.CharField(max_length = 5)
     lms_id = models.CharField(max_length = 15, primary_key = True)
     title = models.CharField(max_length = 25)
     day = models.CharField(max_length = 15)

@@ -54,7 +54,7 @@ class AdminPasswordView(APIView):
             db_connect = DBManager.Firebase()
             db_connect.set_admin(password)
             msg = '비밀번호가 변경되었습니다.'
-            
+
             return Response(msg, status = status.HTTP_200_OK)
             
             
@@ -135,15 +135,20 @@ class BoardWriteView(APIView):
             dump = json.dumps(inform)
             tmp = json.loads(dump)
             comment = 'null'
+            mode = tmp['mode']
             title = tmp['title']
             day = tmp['day']
             contents = tmp['contents']
             lms_id = tmp['lms_id']
-
             db_connect = DBManager.Firebase()
-            db_connect.write_post(lms_id, title, contents, day)
 
-            return Response("Success", status = status.HTTP_200_OK)
+            if mode == 'write':
+                db_connect.write_post(lms_id, title, contents, day)
+                return Response("Success", status = status.HTTP_200_OK)
+
+            elif mode == 'del':
+                msg = db_connect.del_post(lms_id, title)
+                return Response(msg, status = status.HTTP_200_OK)
     
 class CommentsView(APIView):
     def post(self, request):

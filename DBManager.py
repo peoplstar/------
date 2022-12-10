@@ -57,6 +57,15 @@ class Firebase():
         }
         self.user.child('post').child(title).update(information)
 
+    def del_post(self, student_id, title):
+        post_id = self.user.child('post').child(title).child('student_id').get()
+        if post_id == student_id:
+            self.user.child('post').child(title).delete()
+            return 'Delete Success'
+        else:
+            return "Don't have a permission"
+
+
     # check
     def write_comment(self, student_id, title, comments):
         information = {
@@ -146,10 +155,10 @@ class Firebase():
 
 if __name__ == '__main__':
     fb = Firebase()
-    
+    fb.del_post('20000000', '하 시발 좆같다')
     # fb.delete_comment('20222004', '하 시발 좆같다4', 'ㅇㅈㅇㅈ')
     # fb.write_comment('20222001', '하 시발 좆같다', 'ㅇㅈㅇㅈ')
     # fb.add_reservation('gym', '2022-12-15', '20220202', '13-00', '15-00', '0')
     # fb.status_user_reservation('gym', '2022-12-15')
-    fb.delete_reservation('gym', '2022-12-15', '20220202')
+    # fb.delete_reservation('gym', '2022-12-15', '20220202')
     # fb.delete_user_reservation('gym', '2022-10-23', '20171473')

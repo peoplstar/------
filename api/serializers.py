@@ -47,6 +47,7 @@ class BoardStatusSerializer(serializers.ModelSerializer):
        fields = ('lms_id',)
        
 class BoardWriteSerializer(serializers.ModelSerializer):
+    mode = serializers.CharField(max_length = 5)
     lms_id = serializers.CharField(max_length = 15)
     title = serializers.CharField(max_length = 25)
     day = serializers.CharField(max_length = 15)
@@ -54,7 +55,7 @@ class BoardWriteSerializer(serializers.ModelSerializer):
     
     class Meta:
        model = BoardWrite
-       fields = ('lms_id', 'title', 'day', 'contents')
+       fields = ('mode', 'lms_id', 'title', 'day', 'contents')
 
 class BoardReadSerializer(serializers.ModelSerializer):
     title = serializers.CharField(max_length = 25)
