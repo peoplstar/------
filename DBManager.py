@@ -22,7 +22,7 @@ class Firebase():
             {"start_time": start_time, "end_time" : end_time, "appd" : appd}
         )
 
-    # 예약 현황 check
+    # 날짜 별 예약 현황 check
     def status_user_reservation(self, place, day):
         time = []
         local_place = self.user.child(place).child(day)
@@ -39,6 +39,8 @@ class Firebase():
     # 예약 삭제 check
     def delete_user_reservation(self, place, day, lms_id):
         self.user.child(place).child(day).child(lms_id).delete()
+
+    # 
 
     # 해당 게시물 타이틀 클릭 시 모든 내용 전송 check 
     def read_board(self, title):
@@ -118,6 +120,7 @@ class Firebase():
         else:
             return '-1'
 
+    # check
     # admin 계정에 예약 log 추가, admin - log - place - day - student_id - time 으로 저장
     def add_admin_reservation_log(self, place, day, student_id, start_time, end_time):
         self.admin.child('log').child(place).child(day).child(student_id).update(
@@ -125,18 +128,18 @@ class Firebase():
         )
 
 
-    # admin 계정의 예약 log 삭제
+    # admin 계정의 예약 log 삭제 check
     def delete_admin_reservation_log(self, place, day, student_id):
         self.admin.child('log').child(place).child(day).child(student_id).delete()
 
 
-    # 예약, 예약 로그 추가
+    # 예약, 예약 로그 추가 check
     def add_reservation(self, place, day, student_id, start_time, end_time, appd):
         #place, day, lms_id, start_time, end_time, appd)
         self.add_admin_reservation_log(place, day, student_id, start_time, end_time)
         self.add_user_reservation(place, day, student_id, start_time, end_time, appd)
 
-    # 예약, 예약 로그 삭제
+    # 예약, 예약 로그 삭제 check
     def delete_reservation(self, place, day, student_id):
         self.delete_admin_reservation_log(place, day, student_id)
         self.delete_user_reservation(place, day, student_id)
