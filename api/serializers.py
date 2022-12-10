@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead
+from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead, AdminPassword
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -10,6 +10,13 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Login
         fields = ('lms_id', 'lms_pw')
+
+class AdminPasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length = 30)
+    
+    class Meta:
+        model = AdminPassword
+        fields = ('password',)
         
 class StatusSerializer(serializers.ModelSerializer):
     day = serializers.CharField(max_length = 10)
@@ -26,11 +33,11 @@ class ReservationSerializer(serializers.ModelSerializer):
     place = serializers.CharField(max_length = 20)
     start_time = serializers.CharField(max_length = 10)
     end_time = serializers.CharField(max_length = 10)
-    appd = serializers.CharField(max_length = 1)
+    appd = serializers.CharField(max_length = 3)
     
     class Meta:
        model = Reservation
-       fields = ('lms_id', 'day', 'place', 'start_time', 'end_time', 'appd')
+       fields = ('mode', 'lms_id', 'day', 'place', 'start_time', 'end_time', 'appd')
        
 class BoardStatusSerializer(serializers.ModelSerializer):
     lms_id = serializers.CharField(max_length = 15)

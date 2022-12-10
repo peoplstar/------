@@ -5,8 +5,10 @@ from django.db import models
 class Login(models.Model):
     lms_id = models.CharField(max_length = 15, primary_key = True)
     lms_pw = models.CharField(max_length = 30)
-    
-    
+
+class AdminPassword(models.Model):
+    password = models.CharField(max_length = 30)
+
 class Status(models.Model):
     day = models.CharField(max_length = 15, primary_key = True)
     place = models.CharField(max_length = 20)
@@ -18,7 +20,7 @@ class Reservation(models.Model):
     place = models.CharField(max_length = 20)
     start_time = models.CharField(max_length = 10)
     end_time = models.CharField(max_length = 10)
-    appd = models.CharField(max_length = 1)
+    appd = models.CharField(max_length = 3)
 
 class Comments(models.Model):
     mode = models.CharField(max_length = 5)

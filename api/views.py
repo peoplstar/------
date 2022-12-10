@@ -10,7 +10,7 @@ import login
 from .serializers import (BoardStatusSerializer, LoginSerializer,
                           ReservationSerializer, StatusSerializer, 
                           BoardWriteSerializer, CommentsSerializer,
-                          BoardReadSerializer)
+                          BoardReadSerializer, AdminPasswordSerializer)
 
 err_msg = "입력하신 아이디 혹은 비밀번호가 일치하지 않습니다."
 suc_msg = "로그인이 되었습니다."
@@ -42,6 +42,21 @@ class LoginView(APIView):
                     return Response(suc_msg, status = status.HTTP_200_OK)
                 else :
                     return Response(err_msg, status = status.HTTP_200_OK)
+
+class AdminPasswordView(APIView):
+    def post(self, request):
+        serializer = AdminPasswordSerializer(data = request.data)
+        if serializer.is_valid():
+            inform = request.data
+            dump = json.dumps(inform)
+            tmp = json.loads(dump)
+            password = tmp['password']
+            db_connect = DBManager.Firebase()
+            db_connect.set_admin(password)
+            msg = '비밀번호가 변경되었습니다.'
+            
+            return Response(msg, status = status.HTTP_200_OK)
+            
             
 class StatusView(APIView):
     def post(self, request):
@@ -59,6 +74,7 @@ class StatusView(APIView):
             return Response(status_time, status = status.HTTP_200_OK)
             # DB에서 place, day 기반 사용중인 시간대 전송
             
+# check
 class ReservationView(APIView):
       def post(self, request):
         serializer = ReservationSerializer(data = request.data)
