@@ -10,7 +10,8 @@ import login
 from .serializers import (BoardStatusSerializer, LoginSerializer,
                           ReservationSerializer, StatusSerializer, 
                           BoardWriteSerializer, CommentsSerializer,
-                          BoardReadSerializer, AdminPasswordSerializer)
+                          BoardReadSerializer, AdminPasswordSerializer,
+                          CheckLogSerializer)
 
 err_msg = "입력하신 아이디 혹은 비밀번호가 일치하지 않습니다."
 suc_msg = "로그인이 되었습니다."
@@ -169,3 +170,15 @@ class CommentsView(APIView):
                 db_connect.delete_comment(lms_id, title, comment) 
 
             return Response("Success", status = status.HTTP_200_OK)
+
+class CheckLogView(APIView):
+    def post(self, request):
+        serializer = CheckLogSerializer(data = request.data)
+        if serializer.is_valid():
+            inform = request.data
+            dump = json.dumps(inform)
+            tmp = json.loads(dump)
+
+            db_connect = DBManager.Firebase()
+            log = db_connect.check_log_admin()
+            return Response(log, status = status.HTTP_200_OK)

@@ -40,5 +40,9 @@ class BoardWrite(models.Model):
 
 class BoardRead(models.Model):
     title = models.CharField(max_length = 25)
+
+class SingOffOnRez(models.Model):
+    appd = models.CharField(max_length = 3)
     
-    
+class CheckLog(models.Model):
+    appd = models.CharField(max_length = 3)

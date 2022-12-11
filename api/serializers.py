@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead, AdminPassword
+from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead, AdminPassword, CheckLog
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -73,3 +73,10 @@ class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
        model = Comments
        fields = ('mode', 'lms_id', 'title', 'comment')
+
+class CheckLogSerializer(serializers.ModelSerializer):
+    appd = serializers.CharField(max_length = 3)
+    
+    class Meta:
+       model = BoardRead
+       fields = ('appd',)
