@@ -8,8 +8,8 @@ class Firebase():
     def __init__(self):
         # Firebase database 인증 및 앱 초기화
         if not firebase_admin._apps:
-            cred = credentials.Certificate("/home/ubuntu/gwnu_project.json")
-            
+            #cred = credentials.Certificate("/home/ubuntu/gwnu_project.json")
+            cred = credentials.Certificate("gwnu-reservation-496bf-firebase-adminsdk-w90ca-6fc6c9370a.json")
             firebase_admin.initialize_app(cred, {
                 'databaseURL': 'https://gwnu-reservation-496bf-default-rtdb.asia-southeast1.firebasedatabase.app/'
             })
@@ -164,14 +164,22 @@ class Firebase():
         self.admin.child('log').child(place).child(day).child(lms_id).update({"appd": appd})
         self.user.child(place).child(day).child(lms_id).update({"appd": appd})
 
+    # 관리자 토큰 값 받기
+    def get_admin_token(self):
+        return self.admin.child('token').get()
+    
+    # 유저 토큰 값 받기
+    def get_user_token(self, place, lms_id, day):
+        return self.user.child(place).child(day).child(lms_id).child('token').get()
 
-# if __name__ == '__main__':
-#     fb = Firebase()
-#     fb.approve_rez('gym', '2022', '2022-12-16', '2')
+
+if __name__ == '__main__':
+    fb = Firebase()
+    # fb.approve_rez('gym', '2022', '2022-12-16', '2')
     # fb.del_post('20000000', '하 시발 좆같다')
     # fb.delete_comment('20222004', '하 시발 좆같다4', 'ㅇㅈㅇㅈ')
     # fb.write_comment('20222001', '하 시발 좆같다', 'ㅇㅈㅇㅈ')
-    #fb.add_reservation('gym', '2022-12-16', '2022', '13-00', '15-00', '1')
+    fb.add_reservation('gym', '2022-12-16', '2022', '13-00', '15-00', '1')
     # fb.status_user_reservation('gym', '2022-12-15')
     # fb.delete_reservation('gym', '2022-12-15', '20220202')
     # fb.delete_user_reservation('gym', '2022-10-23', '20171473')

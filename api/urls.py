@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import BoardStatusView, LoginView, ReservationView, StatusView, BoardReadView, BoardWriteView, CommentsView, AdminPasswordView, CheckLogView
+from .views import BoardStatusView, LoginView, ReservationView, StatusView, BoardReadView, BoardWriteView, CommentsView, AdminPasswordView, CheckLogView, ApproveRezView
 
 urlpatterns = [
    path('login/', LoginView.as_view()),
@@ -12,5 +12,5 @@ urlpatterns = [
    path('board/read/', BoardReadView.as_view()),
    path('admin/passwd/', AdminPasswordView.as_view()),
    path('admin/log/', CheckLogView.as_view()),
-   path('admin/appd/', CheckLogView.as_view())
+   path('admin/appd/', ApproveRezView.as_view())
 ]

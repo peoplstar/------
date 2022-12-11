@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 import DBManager
 import login
+import push_fcm_notification as fcm
 
 from .serializers import (BoardStatusSerializer, LoginSerializer,
                           ReservationSerializer, StatusSerializer, 
@@ -83,20 +84,24 @@ class ReservationView(APIView):
             inform = request.data
             dump = json.dumps(inform)
             tmp = json.loads(dump)
+
             mode = tmp['mode']
             lms_id = tmp['lms_id']
             day = tmp['day']
             place = tmp['place']
             start_time = tmp['start_time']
             end_time = tmp['end_time']
-            appd = tmp['appd'] # 승인 여부
-
+            appd = tmp['appd']
+            # token = tmp['token']
             db_connect = DBManager.Firebase()
+            # admin_token = db_connect.get_admin_token()
+
             if mode == 'rez':
                 db_connect.add_reservation(place, day, lms_id, start_time, end_time, appd)
+                #fcm.sendMessage(f'{lms_id}님이 예약 신청 하였습니다.', 'GWNU 대관 시스템', admin_token)
             elif mode == 'del':
                 db_connect.delete_reservation(place, day, lms_id)
-            
+                #fcm.sendMessage(f'{lms_id}님이 예약 취소 하였습니다.', 'GWNU 대관 시스템', admin_token)
             return Response("Success", status = status.HTTP_200_OK)
             # 해당 내용을 DB에 전송 이후 관리자에게 FCM
             
@@ -183,12 +188,15 @@ class ApproveRezView(APIView):
             appd = tmp['appd']
             place = tmp['place']
             db_connect = DBManager.Firebase()
-            
-            if appd == '2':
+            # user_token = db_connect.get_user_token(place, lms_id, day)
+
+            if appd == '2': # 1 : 대기, 2 : 허가, 3 : 불허
                 db_connect.approve_rez(place, lms_id, day, appd)
+                # fcm.sendMessage(f'{lms_id}님이 예약이 승인 되었습니다.', 'GWNU 대관 시스템', user_token)
                 return Response("승인 허가", status = status.HTTP_200_OK)
             elif appd == '3':
                 db_connect.delete_reservation(place, day, lms_id)
+                # fcm.sendMessage(f'{lms_id}님이 예약이 거부 되었습니다.', 'GWNU 대관 시스템', user_token)
                 return Response("승인 거부", status = status.HTTP_200_OK)
 
 class CheckLogView(APIView):
