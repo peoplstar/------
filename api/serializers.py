@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead, AdminPassword, CheckLog
+from .models import BoardStatus, BoardWrite, Login, Reservation, Status, Comments, BoardRead, AdminPassword, ApproveRez, CheckLog
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -38,6 +38,16 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
        model = Reservation
        fields = ('mode', 'lms_id', 'day', 'place', 'start_time', 'end_time', 'appd')
+
+class CommentsSerializer(serializers.ModelSerializer):
+    mode = serializers.CharField(max_length = 5)
+    lms_id = serializers.CharField(max_length = 15)
+    title = serializers.CharField(max_length = 25)
+    comment = serializers.CharField(max_length = 50)    
+    
+    class Meta:
+       model = Comments
+       fields = ('mode', 'lms_id', 'title', 'comment')
        
 class BoardStatusSerializer(serializers.ModelSerializer):
     lms_id = serializers.CharField(max_length = 15)
@@ -64,19 +74,19 @@ class BoardReadSerializer(serializers.ModelSerializer):
        model = BoardRead
        fields = ('title',)
 
-class CommentsSerializer(serializers.ModelSerializer):
-    mode = serializers.CharField(max_length = 5)
+class ApproveRezSerializer(serializers.ModelSerializer):
     lms_id = serializers.CharField(max_length = 15)
-    title = serializers.CharField(max_length = 25)
-    comment = serializers.CharField(max_length = 50)    
+    day = serializers.CharField(max_length = 15)
+    place = serializers.CharField(max_length = 20)
+    appd = serializers.CharField(max_length = 3)
     
     class Meta:
-       model = Comments
-       fields = ('mode', 'lms_id', 'title', 'comment')
+       model = ApproveRez
+       fields = ('lms_id', 'day', 'place', 'appd')
 
 class CheckLogSerializer(serializers.ModelSerializer):
     appd = serializers.CharField(max_length = 3)
     
     class Meta:
-       model = BoardRead
+       model = CheckLog
        fields = ('appd',)

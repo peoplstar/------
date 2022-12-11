@@ -41,7 +41,10 @@ class BoardWrite(models.Model):
 class BoardRead(models.Model):
     title = models.CharField(max_length = 25)
 
-class SingOffOnRez(models.Model):
+class ApproveRez(models.Model):
+    lms_id = models.CharField(max_length = 15, primary_key = True)
+    day = models.CharField(max_length = 15)
+    place = models.CharField(max_length = 20)
     appd = models.CharField(max_length = 3)
     
 class CheckLog(models.Model):

@@ -11,5 +11,6 @@ urlpatterns = [
    path('board/comments/', CommentsView.as_view()),
    path('board/read/', BoardReadView.as_view()),
    path('admin/passwd/', AdminPasswordView.as_view()),
-   path('admin/log/', CheckLogView.as_view())
+   path('admin/log/', CheckLogView.as_view()),
+   path('admin/appd/', CheckLogView.as_view())
 ]
